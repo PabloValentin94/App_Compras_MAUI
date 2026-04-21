@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App_Compras_MAUI.View.List"
+             Title="List">
+    <ContentPage.Content>
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto,Auto,*,Auto">
+            <Label Text="Listagem" Grid.Column="0" Grid.Row="0" Style="{ StaticResource lbl_primary }" />
+
+            <SearchBar x:Name="srcbar_produtos" Grid.Column="0" Grid.Row="1" Placeholder="Pressione enter para pesquisar produtos..." SearchButtonPressed="srcbar_produtos_SearchButtonPressed" />
+
+            <RefreshView x:Name="rfsv_produtos" Grid.Column="0" Grid.Row="2" Refreshing="rfsv_produtos_Refreshing">
+                <CollectionView x:Name="clv_produtos" ItemsLayout="VerticalList" SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView Margin="5">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+
+                                            <VisualState x:Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{ DynamicResource Base300 }" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem x:Name="swit_details" BackgroundColor="{ DynamicResource Secondary }" IconImageSource="Form/Actions/Details.png" Invoked="swit_details_Invoked" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem x:Name="swit_update" BackgroundColor="{ DynamicResource Info }" IconImageSource="Form/Actions/Update.png" Invoked="swit_update_Invoked" />
+                                        <SwipeItem x:Name="swit_delete" BackgroundColor="{ DynamicResource Error }" IconImageSource="Form/Actions/Delete.png" Invoked="swit_delete_Invoked" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{ Binding Id, StringFormat='{}#{0}' }" HorizontalTextAlignment="Start" TextColor="{ DynamicResource Primary }" />
+
+                                    <Label HorizontalTextAlignment="Start" FontSize="Small">
+                                        <MultiBinding StringFormat="{}{0} ({1})">
+                                            <Binding Path="Description" />
+                                            <Binding Path="Quantity" />
+                                        </MultiBinding>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <Label Text="Sem itens adicionados." />
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </RefreshView>
+
+            <VerticalStackLayout Grid.Column="0" Grid.Row="3">
+                <Button x:Name="btn_novo_produto" Text="Novo Produto" Clicked="btn_novo_produto_Clicked" Style="{ StaticResource btn_primary }" />
+
+                <Button x:Name="btn_total_gastos" Text="Gasto Total" Clicked="btn_total_gastos_Clicked"/>
+            </VerticalStackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

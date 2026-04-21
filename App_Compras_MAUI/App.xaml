@@ -9,6 +9,26 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Label" x:Key="lbl_primary">
+                <Setter Property="FontSize" Value="35" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{ DynamicResource Primary }" />
+            </Style>
+
+            <Style TargetType="Label" x:Key="lbl_form">
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+            </Style>
+
+            <Style TargetType="Button" x:Key="btn_primary">
+                <Setter Property="BackgroundColor" Value="{ DynamicResource Primary }" />
+                <Setter Property="BorderColor" Value="{ DynamicResource PrimaryContent }" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{ DynamicResource PrimaryContent }" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

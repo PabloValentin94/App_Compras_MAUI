@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Globalization;
 
 namespace App_Compras_MAUI
 {
@@ -7,11 +7,18 @@ namespace App_Compras_MAUI
         public App()
         {
             InitializeComponent();
+
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            Window window = new Window(new AppShell());
+
+            window.Height = 600;
+            window.Width = 350;
+
+            return window;
         }
     }
 }
