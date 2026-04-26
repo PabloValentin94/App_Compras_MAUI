@@ -45,16 +45,18 @@
                                     </SwipeItems>
                                 </SwipeView.RightItems>
 
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="{ Binding Id, StringFormat='{}#{0}' }" HorizontalTextAlignment="Start" TextColor="{ DynamicResource Primary }" />
+                                <Grid ColumnDefinitions="25,*,45" RowDefinitions="*" RowSpacing="5">
+                                    <Label Text="{ Binding Id, StringFormat='{}#{0}' }" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Start" TextColor="{ DynamicResource Primary }" />
 
-                                    <Label HorizontalTextAlignment="Start" FontSize="Small">
+                                    <Label Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Start" FontSize="Small">
                                         <MultiBinding StringFormat="{}{0} ({1})">
                                             <Binding Path="Description" />
                                             <Binding Path="Quantity" />
                                         </MultiBinding>
                                     </Label>
-                                </HorizontalStackLayout>
+
+                                    <Button x:Name="btn_options" Text="⋮" Grid.Column="2" Grid.Row="0" BackgroundColor="Transparent" BorderWidth="0" HorizontalOptions="End" CornerRadius="50" Clicked="btn_options_Clicked" />
+                                </Grid>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
