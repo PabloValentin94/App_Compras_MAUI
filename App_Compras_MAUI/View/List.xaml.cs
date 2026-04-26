@@ -1,4 +1,4 @@
-using App_Compras_MAUI.Model;
+using App_Compras_MAUI.Utils;
 
 using System.Collections.ObjectModel;
 
@@ -10,13 +10,48 @@ public partial class List : ContentPage
 
     string? search_term = null;
 
-
     public List()
 	{
 		InitializeComponent();
 
         clv_produtos.ItemsSource = products_list;
 	}
+
+    protected override async void OnAppearing()
+    {
+        try
+        {
+            base.OnAppearing();
+
+            rfsv_produtos.IsRefreshing = true;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro!", ex.Message, "OK");
+        }
+    }
+
+    private async void DeleteProduct(Model.Product product)
+    {
+        try
+        {
+            if (await DisplayAlertAsync("Atenção!", $"Realmente deseja excluir o produto '{product.Description}'?", "OK", "Cancelar"))
+            {
+                int rows_affected = await (new Helper.Modules.Product()).Delete(product.Id);
+
+                products_list.Remove(product);
+
+                if (rows_affected > 0)
+                {
+                    await DisplayAlertAsync("Atenção!", "Produto deletado com sucesso.", "OK");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro!", ex.Message, "OK");
+        }
+    }
 
     private async Task LoadTableData()
     {
@@ -56,13 +91,13 @@ public partial class List : ContentPage
         }
     }
 
-    protected override async void OnAppearing()
+    private async void ShowProductData(Model.Product product)
     {
         try
         {
-            base.OnAppearing();
+            string product_data = $"Descrição: {product.Description}\n\nQuantidade: {product.Quantity}\n\nPreço: {product.Price.ToString("C2")}\n\nTotal: {product.Total_Cost.ToString("C2")}";
 
-            rfsv_produtos.IsRefreshing = true;
+            await DisplayAlertAsync($"Dados do Produto (#{product.Id})", product_data, "OK");
         }
         catch (Exception ex)
         {
@@ -70,17 +105,13 @@ public partial class List : ContentPage
         }
     }
 
-    private async void swit_update_Invoked(object sender, EventArgs e)
+    private async void UpdateProduct(Model.Product product)
     {
         try
         {
-            SwipeItem item = (SwipeItem)sender;
-
-            Model.Product selected_product = (Model.Product)item.BindingContext;
-
             await Navigation.PushAsync(new Form()
             {
-                BindingContext = selected_product
+                BindingContext = product
             });
         }
         catch (Exception ex)
@@ -97,17 +128,7 @@ public partial class List : ContentPage
 
             Model.Product selected_product = (Model.Product)item.BindingContext;
 
-            if (await DisplayAlertAsync("Atenção!", $"Realmente deseja excluir o produto '{selected_product.Description}'?", "OK", "Cancelar"))
-            {
-                int rows_affected = await (new Helper.Modules.Product()).Delete(selected_product.Id);
-
-                products_list.Remove(selected_product);
-
-                if (rows_affected > 0)
-                {
-                    await DisplayAlertAsync("Atenção!", "Produto deletado com sucesso.", "OK");
-                }
-            }
+            DeleteProduct(selected_product);
         }
         catch (Exception ex)
         {
@@ -123,9 +144,23 @@ public partial class List : ContentPage
 
             Model.Product selected_product = (Model.Product)item.BindingContext;
 
-            string product_data = $"Descrição: {selected_product.Description}\n\nQuantidade: {selected_product.Quantity}\n\nPreço: {selected_product.Price.ToString("C2")}\n\nTotal: {selected_product.Total_Cost.ToString("C2")}";
+            ShowProductData(selected_product);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro!", ex.Message, "OK");
+        }
+    }
 
-            await DisplayAlertAsync($"Dados do Produto (#{selected_product.Id})", product_data, "OK");
+    private async void swit_update_Invoked(object sender, EventArgs e)
+    {
+        try
+        {
+            SwipeItem item = (SwipeItem)sender;
+
+            Model.Product selected_product = (Model.Product)item.BindingContext;
+
+            UpdateProduct(selected_product);
         }
         catch (Exception ex)
         {
@@ -159,13 +194,30 @@ public partial class List : ContentPage
         }
     }
 
-    private async void rfsv_produtos_Refreshing(object sender, EventArgs e)
+    private async void btn_options_Clicked(object sender, EventArgs e)
     {
-        // Esse evento é disparado toda vez que a propriedade "IsRefreshing" do "RefreshView" tem seu valor alterado para "True".
-
         try
         {
-            await LoadTableData();
+            Button item = (Button)sender;
+
+            Model.Product selected_product = (Model.Product)item.BindingContext;
+
+            string choice = await DisplayActionSheetAsync($"{selected_product.Description} (#{selected_product.Id})", ItemContextActions.Cancel, ItemContextActions.Delete, ItemContextActions.Details, ItemContextActions.Edit);
+
+            switch (choice)
+            {
+                case ItemContextActions.Delete:
+                    DeleteProduct(selected_product);
+                break;
+
+                case ItemContextActions.Details:
+                    ShowProductData(selected_product);
+                break;
+
+                case ItemContextActions.Edit:
+                    UpdateProduct(selected_product);
+                break;
+            }
         }
         catch (Exception ex)
         {
@@ -182,6 +234,20 @@ public partial class List : ContentPage
             this.search_term = srcbar_produtos.Text.Trim();
 
             rfsv_produtos.IsRefreshing = true;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro!", ex.Message, "OK");
+        }
+    }
+
+    private async void rfsv_produtos_Refreshing(object sender, EventArgs e)
+    {
+        // Esse evento é disparado toda vez que a propriedade "IsRefreshing" do "RefreshView" tem seu valor alterado para "True".
+
+        try
+        {
+            await LoadTableData();
         }
         catch (Exception ex)
         {
