@@ -4,7 +4,7 @@
              x:Class="App_Compras_MAUI.View.List"
              Title="List">
     <ContentPage.Content>
-        <Grid ColumnDefinitions="*" RowDefinitions="Auto,Auto,*,Auto">
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto,Auto,*,Auto" Padding="15" RowSpacing="15">
             <Label Text="Listagem" Grid.Column="0" Grid.Row="0" Style="{ StaticResource lbl_primary }" />
 
             <SearchBar x:Name="srcbar_produtos" Grid.Column="0" Grid.Row="1" Placeholder="Pressione enter para pesquisar produtos..." SearchButtonPressed="srcbar_produtos_SearchButtonPressed" />
@@ -13,7 +13,7 @@
                 <CollectionView x:Name="clv_produtos" ItemsLayout="VerticalList" SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <SwipeView Margin="5">
+                            <SwipeView Margin="5" MinimumHeightRequest="45">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroupList>
                                         <VisualStateGroup x:Name="CommonStates">

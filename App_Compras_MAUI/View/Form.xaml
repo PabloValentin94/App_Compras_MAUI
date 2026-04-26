@@ -4,7 +4,7 @@
              x:Class="App_Compras_MAUI.View.Form"
              Title="Form">
     <ContentPage.Content>
-        <Grid ColumnDefinitions="*" RowDefinitions="Auto,*,Auto">
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto,*,Auto" Padding="15" RowSpacing="15">
             <Label Text="Cadastro" Grid.Column="0" Grid.Row="0" Style="{ StaticResource lbl_primary }" />
 
             <ScrollView Grid.Column="0" Grid.Row="1">
